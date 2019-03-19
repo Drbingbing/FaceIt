@@ -10,22 +10,32 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    @IBOutlet weak var myFaceView: FaceView!
+    @IBOutlet weak var myFaceView: FaceView! {
+        didSet {
+            updateUI()
+        }
+    }
     
-    var expression = FacialExpression(eyes: .open, mouth: .grin)
+    var expression = FacialExpression(eyes: .closed, mouth: .grin) {
+        didSet {
+            updateUI()
+        }
+    }
     
     private func updateUI() {
         
         switch expression.eyes {
         case .open:
-            myFaceView.eyesOpen = true
+            myFaceView?.eyesOpen = true // use "?" protecting my outlett maybe not set
         case .closed:
-            myFaceView.eyesOpen = false
+            myFaceView?.eyesOpen = false
         case .squinting:
-            myFaceView.eyesOpen = false
+            myFaceView?.eyesOpen = false
         }
+        myFaceView?.mouthCurvature = mouthCurvature[expression.mouth] ?? 0.0
     }
     
-    private let mouthCurvature = [FacialExpression.Mouth.grin: 0.5]
+    private let mouthCurvature = [FacialExpression.Mouth.grin: 0.5, .frown: -1.0, .smile: 1.0,
+                                  .neutral: 0.0, .smirk: -0.5]
 }
 

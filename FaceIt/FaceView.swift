@@ -12,17 +12,28 @@ import UIKit
 class FaceView: UIView {
     
     @IBInspectable
-    var scale : CGFloat =  0.9
+    var scale : CGFloat =  0.9 { didSet{ setNeedsDisplay() } }
     
     @IBInspectable
-    var eyesOpen : Bool = false
+    var eyesOpen : Bool = false { didSet{ setNeedsDisplay() } }
     
     @IBInspectable
-    var lineWidth : CGFloat = 5.0
+    var lineWidth : CGFloat = 5.0 { didSet{ setNeedsDisplay() } }
     
     @IBInspectable
     var mouthCurvature : Double = 1.0 // 1.0 is full smile and -1.0 is full frown
     
+    @objc func changeScale(byReactingTo pinchRecognizer: UIPinchGestureRecognizer) {
+        switch pinchRecognizer.state {
+        case .changed, .ended:
+            scale *= pinchRecognizer.scale
+            pinchRecognizer.scale = 1 // avoid pinch big and big. ex: 1 * 2 = 2, 2 * 2.1 = 4.2
+        default:
+            break
+        }
+    }
+    
+    // Private Implementation
     private var skullRadius : CGFloat {
         
         return min(bounds.size.width, bounds.size.height) / 2 * scale

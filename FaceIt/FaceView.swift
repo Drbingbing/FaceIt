@@ -23,6 +23,7 @@ class FaceView: UIView {
     @IBInspectable
     var mouthCurvature : Double = 1.0 // 1.0 is full smile and -1.0 is full frown
     
+    // this func doesn't effect model, so put it in here
     @objc func changeScale(byReactingTo pinchRecognizer: UIPinchGestureRecognizer) {
         switch pinchRecognizer.state {
         case .changed, .ended:
@@ -36,11 +37,11 @@ class FaceView: UIView {
     // Private Implementation
     private var skullRadius : CGFloat {
         
-        return min(bounds.size.width, bounds.size.height) / 2 * scale
+        return min(bounds.size.width, bounds.size.height) / 2 * scale // use min() is for landscape or portrait to fully fit in the screen. divide by 2 because it's radius not diameter
     }
     private var skullCenter : CGPoint {
         
-        return CGPoint(x: bounds.midX, y: bounds.midY)
+        return CGPoint(x: bounds.midX, y: bounds.midY) // right in the center, in the myFaceview center
     }
     
     private enum Eye {
@@ -62,7 +63,7 @@ class FaceView: UIView {
         
         let path : UIBezierPath
         if eyesOpen {
-            path = UIBezierPath(arcCenter: eyeCenter, radius: eyeRadius, startAngle: 0, endAngle: 2 * CGFloat.pi, clockwise: false)
+            path = UIBezierPath(arcCenter: eyeCenter, radius: eyeRadius, startAngle: 0, endAngle: 2 * CGFloat.pi, clockwise: false) // startAngle: 0 is straight out your right
         } else {
             path = UIBezierPath()
             path.move(to: CGPoint(x: eyeCenter.x - eyeRadius, y: eyeCenter.y))
